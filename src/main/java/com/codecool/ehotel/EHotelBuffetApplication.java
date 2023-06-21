@@ -14,6 +14,10 @@ import java.time.LocalDate;
 public class EHotelBuffetApplication {
 
     public static void main(String[] args) {
+        GuestGenerator guestGenerator = new GuestGenerator();
+        Guest guest = guestGenerator.nextGuest();
 
+        IGuestService guestService = new GuestService(guestGenerator, 1000);
+        System.out.println(guestService.getGuestsForDay(LocalDate.now().plusDays(2)));
     }
 }
