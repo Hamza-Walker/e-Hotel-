@@ -28,26 +28,7 @@ public class BuffetServiceImpl implements BuffetServiceInterface {
 
     @Override
     public double collectWaste(Buffet buffet, MealDurability mealDurability) {
-        List<List<MealPortion>> allMealPortions = buffet.getAllMealPortions();
-        double sumCost = 0.0;
-
-        for (List<MealPortion> mealPortions : allMealPortions) {
-            Iterator<MealPortion> iterator = mealPortions.iterator();
-            while (iterator.hasNext()) {
-                MealPortion mealPortion = iterator.next();
-                System.out.println("Comparing durability: " + mealPortion.getDurability() + " with " + mealDurability);
-                if (mealPortion.getDurability() == mealDurability) {
-                    System.out.println("Removing meal portion: " + mealPortion);
-                    sumCost += MealType.valueOf(mealPortion.getMealType()).getCost();
-                    iterator.remove();
-                }
-            }
-        }
-
-        return sumCost;
+       return WasteCollector.collectWaste(buffet,mealDurability);
     }
-
-
-
 
 }

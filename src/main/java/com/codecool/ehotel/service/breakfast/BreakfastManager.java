@@ -7,15 +7,15 @@ import com.codecool.ehotel.service.buffet.MealRefill;
 
 import java.util.*;
 
-import static com.codecool.ehotel.groupSplitter.BreakfastGroupSplitter.CYCLE_DURATION_MINUTES;
 
 public class BreakfastManager {
     private Buffet buffet;
     private List<List<Guest>> breakfastCycles;
     private BuffetServiceImpl buffetService;
     private int unhappyGuests;
-    private double totalWasteCost;
     private double totalCost;
+    private double totalProfit;
+
 
 
     public BreakfastManager(List<List<Guest>> breakfastCycles) {
@@ -23,8 +23,9 @@ public class BreakfastManager {
         this.buffet = new Buffet();
         this.buffetService = new BuffetServiceImpl(buffet);
         this.unhappyGuests = 0;
-        this.totalWasteCost = 0.0;
         this.totalCost=0;
+        this.totalProfit = 0;
+
     }
 
     public void serve() {
@@ -39,18 +40,18 @@ public class BreakfastManager {
             consumeBreakfast(guests);
             delay(1000); // Delay for 1 second (1000 milliseconds)
 
-            // Phase 3: Discard old meals
-            double cycleWasteCost = discardOldMeals(cycle);
-            delay(1500); // Delay for 1.5 seconds (1500 milliseconds)
-            System.out.println("Waste Cost for Cycle " + (cycle + 1) + ": " + cycleWasteCost);
 
             // Print buffet status after each cycle
             System.out.println("Buffet Status (Cycle " + (cycle) + "):");
             System.out.println(buffet);
             delay(1000); // Delay for 1 second (1000 milliseconds)
 
+            // Phase 3: measure statistics and Discard old meals
+            double wasteCost = discardOldMeals(cycle);
+            delay(1500); // Delay for 1.5 seconds (1500 milliseconds)
+            logTotalCost(cycle);
+            logTotalProfit(cycle, wasteCost);
             System.out.println("Number of Unhappy Guests: " + getUnhappyGuests());
-            System.out.println("Total Waste Cost: " + getTotalWasteCost());
         }
     }
 
@@ -79,7 +80,11 @@ public class BreakfastManager {
 
         return mealRefills;
     }
-
+    private void logTotalProfit(int cycle, double wasteCost) {
+        double totalCycleProfit = totalCost - wasteCost;
+        System.out.println("Total Profit for Cycle " + cycle + ": " + totalCycleProfit);
+        totalProfit += totalCycleProfit; // Increment the total profit
+    }
     private int generateRandomRefillAmount() {
         return Constants.RANDOM.nextInt(6); // Generates a number from 0 to 5
     }
@@ -104,6 +109,10 @@ public class BreakfastManager {
             }
         }
     }
+    private void logTotalCost(int cycle) {
+        System.out.println("Total Cost for Cycle " + cycle + ": " + totalCost);
+    }
+
     private double calculateMealCost(MealType mealType) {
         return mealType.getCost();
     }
@@ -123,8 +132,7 @@ public class BreakfastManager {
 
     private double discardOldMeals(int cycle) {
         double wasteCost = buffetService.collectWaste(buffet, MealDurability.SHORT);
-        System.out.println("Discarded old meals (Cycle " + (cycle + 1) + "): Total waste cost: " + wasteCost);
-        totalWasteCost += wasteCost; // Update the total waste cost
+        System.out.println(" Total waste cost: " + wasteCost);
 
         return wasteCost;
     }
@@ -135,9 +143,7 @@ public class BreakfastManager {
         return unhappyGuests;
     }
 
-    public double getTotalWasteCost() {
-        return totalWasteCost;
+    public double getTotalProfit() {
+        return totalProfit;
     }
-
-    // Other utility methods, if needed
 }

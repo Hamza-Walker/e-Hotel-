@@ -3,9 +3,9 @@ package com.codecool.ehotel.model;
 import static com.codecool.ehotel.model.MealDurability.*;
 
 public enum MealType {
-    SCRAMBLED_EGGS (70, SHORT),
+    SCRAMBLED_EGGS (70, MEDIUM),
     SUNNY_SIDE_UP (70, SHORT),
-    FRIED_SAUSAGE(100, SHORT),
+    FRIED_SAUSAGE(100, LONG),
     FRIED_BACON(70, SHORT),
     PANCAKE(40, SHORT),
     CROISSANT(40, SHORT),
