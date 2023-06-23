@@ -26,7 +26,7 @@ public class BreakfastSimulationTest {
         GuestGenerator guestGenerator = new GuestGenerator(); // Create an instance of GuestGenerator
 
         for (int i = 0; i < 30; i++) {
-            int numGuests = Constants.RANDOM.nextInt(50) + 1; // Generate a random number of guests from 1 to 5
+            int numGuests = Constants.RANDOM.nextInt(10) + 1; // Generate a random number of guests from 1 to 5
             List<Guest> cycle = new ArrayList<>();
 
             for (int j = 0; j < numGuests; j++) {

@@ -3,14 +3,14 @@ package com.codecool.ehotel.tests;
 import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealPortion;
-import com.codecool.ehotel.service.buffet.IBuffetService;
+import com.codecool.ehotel.service.buffet.BuffetServiceInterface;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
 
 public class ConsumeFreshestTest {
 
     public static void main(String[] args) {
         Buffet buffet = new Buffet();
-        IBuffetService buffetService = new BuffetServiceImpl(buffet);
+        BuffetServiceInterface buffetService = new BuffetServiceImpl(buffet);
 
         // Adding meal portions to the buffet
         buffet.addMealPortion("SCRAMBLED_EGGS", new MealPortion("SCRAMBLED_EGGS", System.currentTimeMillis(), MealDurability.SHORT));

@@ -17,6 +17,7 @@ public class BreakfastManager {
     private double totalWasteCost;
     private double totalCost;
 
+
     public BreakfastManager(List<List<Guest>> breakfastCycles) {
         this.breakfastCycles = breakfastCycles;
         this.buffet = new Buffet();
@@ -48,14 +49,8 @@ public class BreakfastManager {
             System.out.println(buffet);
             delay(1000); // Delay for 1 second (1000 milliseconds)
 
-            // Discard all SHORT and MEDIUM durability meals at the end of the day
-            double endOfDayWasteCost = discardNonLongDurabilityMeals();
-            delay(2000); // Delay for 2 seconds (2000 milliseconds)
-            System.out.println("Buffet Status (End of Day):");
-            System.out.println(buffet);
             System.out.println("Number of Unhappy Guests: " + getUnhappyGuests());
             System.out.println("Total Waste Cost: " + getTotalWasteCost());
-            logTotalCost(cycle);
         }
     }
 
@@ -112,9 +107,7 @@ public class BreakfastManager {
     private double calculateMealCost(MealType mealType) {
         return mealType.getCost();
     }
-    private void logTotalCost(int cycle) {
-        System.out.println("Total Cost for Cycle " + cycle + ": " + totalCost);
-    }
+
 
     private boolean shouldFindMeal() {
         //  75% chance of finding a meal
@@ -129,26 +122,14 @@ public class BreakfastManager {
     }
 
     private double discardOldMeals(int cycle) {
-        long currentTimestamp = System.currentTimeMillis();
-        long thresholdTimestamp = currentTimestamp - (cycle + 1) * CYCLE_DURATION_MINUTES * 60 * 1000;
-
-        double wasteCost = buffetService.collectWaste(buffet, MealDurability.SHORT, thresholdTimestamp, null);
+        double wasteCost = buffetService.collectWaste(buffet, MealDurability.SHORT);
         System.out.println("Discarded old meals (Cycle " + (cycle + 1) + "): Total waste cost: " + wasteCost);
         totalWasteCost += wasteCost; // Update the total waste cost
 
         return wasteCost;
     }
 
-    private double discardNonLongDurabilityMeals() {
-        double wasteCost = 0.0;
 
-        wasteCost += buffetService.collectWaste(buffet, MealDurability.SHORT, 0, null);
-        wasteCost += buffetService.collectWaste(buffet, MealDurability.MEDIUM, 0, null);
-        System.out.println("Discarded non-LONG durability meals (End of Day): Total waste cost: " + wasteCost);
-        totalWasteCost += wasteCost; // Update the total waste cost
-
-        return wasteCost;
-    }
 
     public int getUnhappyGuests() {
         return unhappyGuests;

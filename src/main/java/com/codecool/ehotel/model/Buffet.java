@@ -33,6 +33,9 @@ public class Buffet {
             mealPortions.remove(0); // Remove the first meal portion to decrement the count
         }
     }
+    public List<List<MealPortion>> getAllMealPortions() {
+        return new ArrayList<>(meals.values());
+    }
 
 
     @Override

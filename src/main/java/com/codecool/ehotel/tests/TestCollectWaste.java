@@ -4,7 +4,7 @@ import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.MealDurability;
 import com.codecool.ehotel.model.MealPortion;
 import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
-import com.codecool.ehotel.service.buffet.IBuffetService;
+import com.codecool.ehotel.service.buffet.BuffetServiceInterface;
 
 public class TestCollectWaste {
     public static void main(String[] args) {
@@ -15,10 +15,10 @@ public class TestCollectWaste {
         buffet.addMealPortion("PANCAKE", new MealPortion("PANCAKE", System.currentTimeMillis() - 3000, MealDurability.SHORT));
         buffet.addMealPortion("PANCAKE", new MealPortion("PANCAKE", System.currentTimeMillis() - 4000, MealDurability.MEDIUM));
 
-        IBuffetService buffetService = new BuffetServiceImpl(buffet);
+        BuffetServiceInterface buffetService = new BuffetServiceImpl(buffet);
 
         // Collect waste with a timestamp of 1500 milliseconds and meal durability of SHORT
-        double wasteCost = buffetService.collectWaste(buffet, MealDurability.SHORT, 1500L, "PANCAKE");
+        double wasteCost = buffetService.collectWaste(buffet, MealDurability.SHORT);
 
         // Log the results
         System.out.println("Waste cost: " + wasteCost);
