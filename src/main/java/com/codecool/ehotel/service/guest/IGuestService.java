@@ -6,5 +6,6 @@ import java.time.LocalDate;
 import java.util.Set;
 
 public interface IGuestService {
- Set <Guest> getGuestsForDay(LocalDate date);
+    Set<Guest> getGuestsForDay(LocalDate date);
+
 }

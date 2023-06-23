@@ -14,10 +14,20 @@ import java.time.LocalDate;
 public class EHotelBuffetApplication {
 
     public static void main(String[] args) {
+        ILogger logger = new ConsoleLogger();
+
+        // Initialize services
+        Constants.GUEST_NAMES.forEach(System.out::println);
+        // Generate guests for the season
+
         GuestGenerator guestGenerator = new GuestGenerator();
+
         Guest guest = guestGenerator.nextGuest();
+       // System.out.println(guest);
 
         IGuestService guestService = new GuestService(guestGenerator, 1000);
-        System.out.println(guestService.getGuestsForDay(LocalDate.now().plusDays(2)));
+        //System.out.println(guestService.getGuestsForDay(LocalDate.now().plusDays(2)));
+        
+        // Run breakfast buffet
     }
 }

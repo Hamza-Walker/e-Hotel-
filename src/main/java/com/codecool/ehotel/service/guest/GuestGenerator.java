@@ -10,20 +10,20 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GuestGenerator implements IGuestProvider{
-
     @Override
-    public Guest nextGuest() {
+    public  Guest nextGuest() {
         int guestNameIndex = Constants.RANDOM.nextInt(Constants.GUEST_NAMES.size());
         String guestName = Constants.GUEST_NAMES.get(guestNameIndex);
         GuestType guestType = GuestType.values()[Constants.RANDOM.nextInt(GuestType.values().length)];
         LocalDate checkIn = generateNewDate();
         LocalDate checkOut = checkIn.plusDays(Constants.RANDOM.nextInt(1, Constants.MAX_STAY));
-        return new Guest(guestName, guestType, checkIn, checkOut) ;
+
+        return new Guest(guestName, guestType, checkIn, checkOut);
     }
 
     private LocalDate generateNewDate() {
         LocalDate today = LocalDate.now();
-        LocalDate nextYear = today.plusYears((1));
+        LocalDate nextYear = today.plusYears(1);
 
         long minDay = today.toEpochDay();
         long maxDay = nextYear.toEpochDay();
