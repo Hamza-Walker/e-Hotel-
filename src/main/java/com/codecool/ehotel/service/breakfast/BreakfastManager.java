@@ -2,8 +2,8 @@ package com.codecool.ehotel.service.breakfast;
 
 import com.codecool.ehotel.constants.Constants;
 import com.codecool.ehotel.model.*;
-import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
-import com.codecool.ehotel.service.buffet.MealRefill;
+import com.codecool.ehotel.service.buffet.BuffetServiceImplementation;
+import com.codecool.ehotel.model.MealRefill;
 
 import java.util.*;
 
@@ -11,17 +11,15 @@ import java.util.*;
 public class BreakfastManager {
     private Buffet buffet;
     private List<List<Guest>> breakfastCycles;
-    private BuffetServiceImpl buffetService;
+    private BuffetServiceImplementation buffetService;
     private int unhappyGuests;
     private double totalCost;
     private double totalProfit;
 
-
-
     public BreakfastManager(List<List<Guest>> breakfastCycles) {
         this.breakfastCycles = breakfastCycles;
         this.buffet = new Buffet();
-        this.buffetService = new BuffetServiceImpl(buffet);
+        this.buffetService = new BuffetServiceImplementation(buffet);
         this.unhappyGuests = 0;
         this.totalCost=0;
         this.totalProfit = 0;
@@ -62,12 +60,13 @@ public class BreakfastManager {
             e.printStackTrace();
         }
     }
-
     private void refillBuffet() {
-        List<MealRefill> mealRefills = generateMealRefills(); // Generate meal refills for the buffet
+        Map<GuestType, Integer> futureGuests = calculateFutureGuests(); // Calculate future guest counts
+        int cyclesLeft = breakfastCycles.size() - 1; // Calculate the number of cycles left
+
+        List<MealRefill> mealRefills = getOptimalPortions(buffet, futureGuests, cyclesLeft, Constants.UNHAPPY_GUEST_COST);
         buffetService.refillBuffet(mealRefills);
     }
-
     private List<MealRefill> generateMealRefills() {
         List<MealRefill> mealRefills = new ArrayList<>();
 
@@ -88,7 +87,6 @@ public class BreakfastManager {
     private int generateRandomRefillAmount() {
         return Constants.RANDOM.nextInt(6); // Generates a number from 0 to 5
     }
-
     private void consumeBreakfast(List<Guest> guests) {
         for (Guest guest : guests) {
             MealType mealPreference = getRandomMealPreference(guest);
@@ -112,38 +110,74 @@ public class BreakfastManager {
     private void logTotalCost(int cycle) {
         System.out.println("Total Cost for Cycle " + cycle + ": " + totalCost);
     }
-
     private double calculateMealCost(MealType mealType) {
         return mealType.getCost();
     }
-
-
     private boolean shouldFindMeal() {
         //  75% chance of finding a meal
         return Constants.RANDOM.nextDouble() <= 0.75;
     }
-
     private MealType getRandomMealPreference(Guest guest) {
         List<MealType> mealPreferences = guest.guestType().getMealPreferences();
         Random random = new Random();
         int index = random.nextInt(mealPreferences.size());
         return mealPreferences.get(index);
     }
-
     private double discardOldMeals(int cycle) {
         double wasteCost = buffetService.collectWaste(buffet, MealDurability.SHORT);
-        System.out.println(" Total waste cost: " + wasteCost);
+        System.out.println("Total waste cost: -" + wasteCost);
 
         return wasteCost;
     }
-
-
-
     public int getUnhappyGuests() {
         return unhappyGuests;
     }
+    public List<MealRefill> getOptimalPortions(Buffet buffet, Map<GuestType, Integer> futureGuests, int cyclesLeft, double unhappyGuestCost) {
+        List<MealRefill> optimalPortions = new ArrayList<>();
 
-    public double getTotalProfit() {
-        return totalProfit;
+        // Iterate over the guest types
+        for (GuestType guestType : GuestType.values()) {
+            // Get the meal preferences for the guest type
+            List<MealType> mealPreferences = guestType.getMealPreferences();
+
+            // Iterate over the meal types in the guest's meal preferences
+            for (MealType mealType : mealPreferences) {
+                // Get the current portion count for the meal type in the buffet
+                int currentPortions = buffet.getMealPortionz(mealType.toString());
+
+                // Get the number of guests expected for the meal type
+                int expectedGuests = futureGuests.getOrDefault(guestType, 0);
+
+                // Calculate the maximum portions required to satisfy the expected guests
+                int maxPortions = Math.max(currentPortions, expectedGuests);
+
+                // Calculate the minimum portions required to avoid unhappy guests
+                int minPortions = (int) Math.ceil((1.0 * expectedGuests * unhappyGuestCost) / mealType.getCost());
+
+                // Calculate the optimal portions to refill based on the trade-off between minimizing waste and unhappy guests
+                int optimalPortionsCount = Math.min(maxPortions, minPortions);
+
+                // Create a MealRefill object for the meal type with the optimal portion count
+                MealRefill mealRefill = new MealRefill(mealType.toString(), optimalPortionsCount);
+                optimalPortions.add(mealRefill);
+            }
+        }
+
+        return optimalPortions;
     }
+
+    private Map<GuestType, Integer> calculateFutureGuests() {
+        Map<GuestType, Integer> futureGuests = new HashMap<>();
+
+        // Logic to calculate the future guests for each GuestType
+        // You can replace this with your own implementation
+
+        // Example calculation
+        futureGuests.put(GuestType.TOURIST, 10);
+        futureGuests.put(GuestType.KID, 5);
+        futureGuests.put(GuestType.BUSINESS, 2);
+
+        return futureGuests;
+    }
+
 }

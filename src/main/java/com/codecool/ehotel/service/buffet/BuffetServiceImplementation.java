@@ -2,22 +2,20 @@ package com.codecool.ehotel.service.buffet;
 
 import com.codecool.ehotel.model.Buffet;
 import com.codecool.ehotel.model.MealDurability;
-import com.codecool.ehotel.model.MealPortion;
-import com.codecool.ehotel.model.MealType;
+import com.codecool.ehotel.model.MealRefill;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-public class BuffetServiceImpl implements BuffetServiceInterface {
+public class BuffetServiceImplementation implements BuffetServiceInterface {
     private Buffet buffet;
 
-    public BuffetServiceImpl(Buffet buffet) {
+    public BuffetServiceImplementation(Buffet buffet) {
         this.buffet = buffet;
     }
 
     @Override
-    public void refillBuffet(Collection<MealRefill> mealRefills) {
+    public void refillBuffet(List<MealRefill> mealRefills) {
         BuffetRefiller.refillBuffet(buffet, mealRefills);
     }
 

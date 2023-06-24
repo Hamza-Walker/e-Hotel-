@@ -1,4 +1,4 @@
-package com.codecool.ehotel.service.buffet;
+package com.codecool.ehotel.model;
 
 public record MealRefill(String mealType, int amount) {
 }

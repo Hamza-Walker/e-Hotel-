@@ -7,9 +7,22 @@ import java.util.Map;
 
 public class Buffet {
     private Map<String, List<MealPortion>> meals;
+    private Map<String, Integer> mealPortions;
+
 
     public Buffet() {
         this.meals = new HashMap<>();
+        this.mealPortions = new HashMap<>();
+        initializeMealPortions();
+
+    }
+    private void initializeMealPortions() {
+        for (MealType mealType : MealType.values()) {
+            mealPortions.put(mealType.toString(), 0);
+        }
+    }
+    public int getMealPortionz(String mealType) {
+        return mealPortions.getOrDefault(mealType, 0);
     }
 
     public void addMealPortion(String mealType, MealPortion mealPortion) {

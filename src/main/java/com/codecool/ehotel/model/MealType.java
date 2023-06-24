@@ -30,4 +30,5 @@ public enum MealType {
     public MealDurability getDurability() {
         return mealDurability;
     }
+
 }

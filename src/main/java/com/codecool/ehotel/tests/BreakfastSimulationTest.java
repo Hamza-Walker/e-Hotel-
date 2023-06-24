@@ -1,6 +1,7 @@
 package com.codecool.ehotel.tests;
 
 import com.codecool.ehotel.constants.Constants;
+import com.codecool.ehotel.groupSplitter.BreakfastGroupSplitter;
 import com.codecool.ehotel.model.Guest;
 import com.codecool.ehotel.service.breakfast.BreakfastManager;
 import com.codecool.ehotel.service.guest.GuestGenerator;
@@ -21,22 +22,19 @@ public class BreakfastSimulationTest {
     }
 
     private static List<List<Guest>> createBreakfastCycles() {
-        List<List<Guest>> breakfastCycles = new ArrayList<>();
-
-        GuestGenerator guestGenerator = new GuestGenerator(); // Create an instance of GuestGenerator
+        List<Guest> guests = new ArrayList<>();
+        GuestGenerator guestGenerator = new GuestGenerator();
 
         for (int i = 0; i < 30; i++) {
-            int numGuests = Constants.RANDOM.nextInt(10) + 1; // Generate a random number of guests from 1 to 5
-            List<Guest> cycle = new ArrayList<>();
-
-            for (int j = 0; j < numGuests; j++) {
-                cycle.add(guestGenerator.nextGuest());
-            }
-            breakfastCycles.add(cycle);
+            guests.add(guestGenerator.nextGuest());
         }
+
+        BreakfastGroupSplitter groupSplitter = new BreakfastGroupSplitter();
+        List<List<Guest>> breakfastCycles = groupSplitter.splitGuestsIntoBreakfastCycles(guests);
 
         return breakfastCycles;
     }
+
 
 
 

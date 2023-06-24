@@ -1,8 +1,8 @@
 package com.codecool.ehotel.tests;
 
 import com.codecool.ehotel.model.Buffet;
-import com.codecool.ehotel.service.buffet.BuffetServiceImpl;
-import com.codecool.ehotel.service.buffet.MealRefill;
+import com.codecool.ehotel.service.buffet.BuffetServiceImplementation;
+import com.codecool.ehotel.model.MealRefill;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
         mealRefills.add(new MealRefill("FRIED_BACON", 2));
 
         // Create an instance of the buffet service
-        BuffetServiceImpl buffetService = new BuffetServiceImpl(buffet);
+        BuffetServiceImplementation buffetService = new BuffetServiceImplementation(buffet);
 
         // Refill the buffet with the specified meal refills
         buffetService.refillBuffet( mealRefills);
